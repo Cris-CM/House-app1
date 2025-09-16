@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:house_app/app/blocs/home_bloc/home_bloc.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class HomeView extends StatefulWidget {
@@ -26,13 +28,16 @@ class _HomeViewState extends State<HomeView> {
         onError: (val) => debugPrint("❌ Error: $val"),
       );
       debugPrint("¿Disponible? $available");
-
       if (available) {
         setState(() => _isListening = true);
         _speech.listen(
+          localeId: "es-419",
           onResult: (val) {
             setState(() {
               _text = val.recognizedWords;
+              context.read<HomeBloc>().add(
+                HomeEventSendCommand(val.recognizedWords),
+              );
             });
           },
         );
@@ -51,38 +56,12 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: const Text("Casa Inteligente"),
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Card que muestra el texto reconocido
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              elevation: 6,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  _text,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black87,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            const SizedBox(height: 40),
-
-            // Botón circular grande de micrófono
+            Spacer(),
             GestureDetector(
               onTap: _listen,
               child: Container(
@@ -111,6 +90,54 @@ class _HomeViewState extends State<HomeView> {
             Text(
               _isListening ? "🎤 Escuchando..." : "Presiona para hablar",
               style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            Spacer(),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Text(
+                _text,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text(
+                      "Prender Luz de Habitación",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text(
+                      "Apagar Luz de Habitación",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

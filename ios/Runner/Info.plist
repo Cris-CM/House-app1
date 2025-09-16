@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Necesitamos tu permiso para usar la reconocimiento de voz</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Necesitamos tu permiso para usar el microfono</string>
 </dict>
 </plist>

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:house_app/app/blocs/home_bloc/home_bloc.dart';
+import 'package:house_app/colors/palette.dart';
+import 'package:sizer/sizer.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class HomeView extends StatefulWidget {
@@ -55,7 +57,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Palette.grey,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

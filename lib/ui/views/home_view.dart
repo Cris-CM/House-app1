@@ -1,149 +1,184 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:house_app/app/blocs/home_bloc/home_bloc.dart';
+import 'package:get/get.dart';
+import 'package:house_app/app/controllers/home_controller.dart';
 import 'package:house_app/colors/palette.dart';
+import 'package:house_app/widgets/room_card.dart';
 import 'package:sizer/sizer.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class HomeView extends StatefulWidget {
+class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
-
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  late stt.SpeechToText _speech;
-  bool _isListening = false;
-  String _text = "Toca el micrófono y habla...";
-
-  @override
-  void initState() {
-    super.initState();
-    _speech = stt.SpeechToText();
-  }
-
-  Future<void> _listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (val) => debugPrint("✅ Estado: $val"),
-        onError: (val) => debugPrint("❌ Error: $val"),
-      );
-      debugPrint("¿Disponible? $available");
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-          localeId: "es-419",
-          onResult: (val) {
-            setState(() {
-              _text = val.recognizedWords;
-              context.read<HomeBloc>().add(
-                HomeEventSendCommand(val.recognizedWords),
-              );
-            });
-          },
-        );
-      } else {
-        setState(() {
-          _text = "Reconocimiento de voz no disponible en este dispositivo";
-        });
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.grey,
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Spacer(),
-            GestureDetector(
-              onTap: _listen,
-              child: Container(
-                height: 100,
-                width: 100,
+      appBar: AppBar(
+        backgroundColor: Palette.grey,
+        elevation: 0,
+        title: Text(
+          'Casa Inteligente',
+          style: const TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Palette.black,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: _isListening ? Colors.red : Colors.green,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 8,
-                      offset: Offset(0, 4),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Palette.purpleAccent, Palette.red],
+                  ),
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Mi Casa',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Palette.white,
+                          ),
+                        ),
+                        Text(
+                          'Sala principal',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Palette.white.withOpacity(0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '-10°',
+                      style: TextStyle(fontSize: 25.sp, color: Palette.white),
                     ),
                   ],
                 ),
-                child: Icon(
-                  _isListening ? Icons.mic : Icons.mic_none,
-                  size: 50,
-                  color: Colors.white,
-                ),
               ),
-            ),
-            const SizedBox(height: 20),
 
-            Text(
-              _isListening ? "🎤 Escuchando..." : "Presiona para hablar",
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            Spacer(),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Text(
-                _text,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+              const SizedBox(height: 20),
+              Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Palette.white.withOpacity(0.25),
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Prender Luz de Habitación",
-                      textAlign: TextAlign.center,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => controller.selectedTab.value = 0,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          decoration: BoxDecoration(
+                            color: controller.selectedTab.value == 0
+                                ? Palette.white
+                                : Colors.grey.shade400,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Habitaciones",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: controller.selectedTab.value == 0
+                                  ? Palette.black
+                                  : Palette.grey,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Apagar Luz de Habitación",
-                      textAlign: TextAlign.center,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => controller.selectedTab.value = 1,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          decoration: BoxDecoration(
+                            color: controller.selectedTab.value == 1
+                                ? Palette.white
+                                : Colors.grey.shade400,
+                            borderRadius: BorderRadiusDirectional.circular(20),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Dispositivos",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: controller.selectedTab.value == 1
+                                  ? Palette.black
+                                  : Palette.grey,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ],
+              ),
+
+              const SizedBox(height: 15),
+              Expanded(
+                child: Obx(() {
+                  return controller.selectedTab.value == 0
+                      ? _habitacionesView()
+                      : _dispositivosView();
+                }),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _habitacionesView() {
+    return GridView.count(
+      key: const ValueKey(0),
+      padding: const EdgeInsets.all(16),
+      crossAxisCount: 2,
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      childAspectRatio: 6 / 8,
+      children: [
+        RoomCard(
+          image: "assets/images/sala.jpg",
+          title: "Sala",
+          devices: "4 devices",
+          isOn: true,
+          onTap: () {},
+        ),
+        RoomCard(
+          image: "assets/images/sala.jpg",
+          title: "Living",
+          devices: "15 devices",
+          isOn: false,
+          onTap: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget _dispositivosView() {
+    return ListView(
+      key: const ValueKey(1),
+      padding: const EdgeInsets.all(20),
+      children: [Text("Dispositivos")],
     );
   }
 }

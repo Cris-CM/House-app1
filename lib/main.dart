@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:house_app/app/blocs/home_bloc/home_bloc.dart';
-import 'package:house_app/app/injector/injector.dart';
-import 'package:house_app/app/services/command_service.dart';
-import 'package:house_app/ui/views/temperature_view.dart';
+import 'package:get/route_manager.dart';
+import 'package:house_app/app/router.dart';
+import 'package:sizer/sizer.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  setupLocator();
+
   runApp(const MyApp());
 }
 
@@ -16,15 +14,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => HomeBloc(getIt<CommandService>())),
-      ],
-      child: MaterialApp(
-        title: 'Casa Inteligente',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        home: TemperatureDialView(),
-      ),
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return GetMaterialApp(
+          getPages: router,
+          initialRoute: '/login',
+          title: 'Casa Inteligente',
+          theme: ThemeData(primarySwatch: Colors.blue),
+        );
+      },
     );
   }
 }

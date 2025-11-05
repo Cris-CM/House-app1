@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:house_app/app/blocs/home_bloc/home_bloc.dart';
 import 'package:house_app/app/injector/injector.dart';
 import 'package:house_app/app/services/command_service.dart';
-import 'package:house_app/ui/views/room_view.dart';
-import 'ui/views/home_view.dart';
+import 'package:house_app/ui/views/temperature_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Casa Inteligente',
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: RoomView(),
+        home: TemperatureDialView(),
       ),
     );
   }

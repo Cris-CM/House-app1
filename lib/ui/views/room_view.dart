@@ -13,7 +13,7 @@ class _RoomViewState extends State<RoomView> {
   bool salaOn = true;
   bool livingOn = false;
 
-  int selectedTab = 0; // 0 = Habitaciones, 1 = Dispositivos
+  int selectedTab = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,6 @@ class _RoomViewState extends State<RoomView> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              // ----------- TARJETA PRINCIPAL ------------
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 35,

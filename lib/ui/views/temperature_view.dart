@@ -3,8 +3,15 @@ import 'dart:math' as math;
 
 import 'package:house_app/colors/palette.dart';
 
-class TemperatureDialView extends StatelessWidget {
+class TemperatureDialView extends StatefulWidget {
   const TemperatureDialView({super.key});
+
+  @override
+  State<TemperatureDialView> createState() => _TemperatureDialViewState();
+}
+
+class _TemperatureDialViewState extends State<TemperatureDialView> {
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +46,7 @@ class TemperatureDialView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w600,
-                    color: Palette.black,
+                    color: Palette.grey2,
                   ),
                 ),
               ),
@@ -53,6 +60,13 @@ class TemperatureDialView extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Palette.white,
                       borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +81,7 @@ class TemperatureDialView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: Palette.black,
+                            color: Palette.grey2,
                           ),
                         ),
                       ],
@@ -79,6 +93,13 @@ class TemperatureDialView extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Palette.white,
                       borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +114,7 @@ class TemperatureDialView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: Palette.black,
+                            color: Palette.grey2,
                           ),
                         ),
                         Text(
@@ -101,7 +122,7 @@ class TemperatureDialView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: Palette.black,
+                            color: Palette.grey2,
                           ),
                         ),
                       ],
@@ -116,20 +137,20 @@ class TemperatureDialView extends StatelessWidget {
                   DeviceOption(
                     title: "Ventilador",
                     icon: Icons.whatshot,
-                    selected: true, // Activo
-                    onTap: () {},
+                    selected: selectedIndex == 0,
+                    onTap: () => setState(() => selectedIndex = 0),
                   ),
                   DeviceOption(
                     title: "Sonido",
                     icon: Icons.music_note,
-                    selected: false,
-                    onTap: () {},
+                    selected: selectedIndex == 1,
+                    onTap: () => setState(() => selectedIndex = 1),
                   ),
                   DeviceOption(
                     title: "Iluminación",
                     icon: Icons.lightbulb_outline,
-                    selected: false,
-                    onTap: () {},
+                    selected: selectedIndex == 2,
+                    onTap: () => setState(() => selectedIndex = 2),
                   ),
                 ],
               ),
@@ -328,46 +349,55 @@ class DeviceOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTapDown: (_) {},
       onTap: onTap,
-      child: Column(
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            padding: EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: selected
-                  ? LinearGradient(
-                      colors: [Palette.purpleAccent, Palette.red],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                  : null,
-              color: selected ? null : Palette.grey,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: Offset(0, 4),
+      child: AnimatedOpacity(
+        duration: Duration(milliseconds: 150),
+        opacity: selected ? 1.0 : 0.6,
+        child: Column(
+          children: [
+            AnimatedContainer(
+              duration: Duration(milliseconds: 150),
+              padding: EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Palette.black.withValues(alpha: 0.08),
+                  width: 2,
                 ),
-              ],
+                gradient: selected
+                    ? LinearGradient(
+                        colors: [Palette.purpleAccent, Palette.red],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : null,
+                color: selected ? null : Palette.grey,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 8,
+                    offset: Offset(0, 9),
+                  ),
+                ],
+              ),
+              child: Icon(
+                icon,
+                size: 32,
+                color: selected ? Palette.white : Palette.grey2,
+              ),
             ),
-            child: Icon(
-              icon,
-              size: 32,
-              color: selected ? Palette.white : Colors.grey,
+            const SizedBox(height: 10),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Palette.black,
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: selected ? Palette.black : Colors.grey,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

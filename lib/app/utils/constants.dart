@@ -1,3 +1,3 @@
 class Constants {
-  static const String baseUrl = "http://192.168.0.103:3001/";
+  static const String baseUrl = "https://house-api-murex.vercel.app/";
 }

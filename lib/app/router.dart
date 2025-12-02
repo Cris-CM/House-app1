@@ -3,8 +3,10 @@ import 'package:house_app/app/controllers/home_controller.dart';
 import 'package:house_app/app/controllers/login_controller.dart';
 import 'package:house_app/ui/views/home_view.dart';
 import 'package:house_app/ui/views/login_view.dart';
+import 'package:house_app/ui/views/splash_view.dart';
 
 final router = <GetPage>[
+  GetPage(name: '/splash', page: () => const SplashView()),
   GetPage(
     name: '/login',
     page: () => const LoginView(),

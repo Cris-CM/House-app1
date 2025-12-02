@@ -7,7 +7,7 @@ class RoomCard extends StatelessWidget {
   final String devices;
   final bool isOn;
   final VoidCallback onTap;
-
+  final bool containLight;
   const RoomCard({
     super.key,
     required this.image,
@@ -15,40 +15,40 @@ class RoomCard extends StatelessWidget {
     required this.devices,
     required this.isOn,
     required this.onTap,
+    required this.containLight,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 350),
-        curve: Curves.easeOut,
-        decoration: BoxDecoration(
-          color: isOn ? Colors.white : Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: isOn ? Colors.purple.withOpacity(0.25) : Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 350),
+      curve: Curves.easeOut,
+      decoration: BoxDecoration(
+        color: isOn ? Colors.white : Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: isOn ? Colors.purple.withOpacity(0.25) : Colors.black12,
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ClipRRect(
               borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
               child: Image.asset(
                 image,
-                height: 110,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
-
-            Padding(
+          ),
+          Expanded(
+            child: Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,6 +56,8 @@ class RoomCard extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4),
                   Text(
@@ -64,54 +66,55 @@ class RoomCard extends StatelessWidget {
                   ),
                   SizedBox(height: 14),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        isOn ? "ON" : "OFF",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: isOn ? Colors.purple : Colors.black54,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-
-                      GestureDetector(
-                        onTap: onTap,
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 300),
-                          curve: Curves.easeOut,
-                          width: 45,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: isOn ? Palette.purpleAccent : Palette.grey,
+                  if (containLight)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          isOn ? "ON" : "OFF",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: isOn ? Colors.purple : Colors.black54,
+                            fontWeight: FontWeight.w600,
                           ),
-                          child: AnimatedAlign(
+                        ),
+
+                        GestureDetector(
+                          onTap: onTap,
+                          child: AnimatedContainer(
                             duration: Duration(milliseconds: 300),
                             curve: Curves.easeOut,
-                            alignment: isOn
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 3),
-                              width: 18,
-                              height: 18,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isOn ? Colors.white : Colors.grey,
+                            width: 45,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: isOn ? Palette.purpleAccent : Palette.grey,
+                            ),
+                            child: AnimatedAlign(
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                              alignment: isOn
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 3),
+                                width: 18,
+                                height: 18,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isOn ? Colors.white : Colors.grey,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

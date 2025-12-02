@@ -8,6 +8,7 @@ class LoginController extends GetxController {
   final AuthService authService = AuthService(dio);
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final isObscure = false.obs;
 
   void login() async {
     final response = await authService.login(
@@ -17,7 +18,7 @@ class LoginController extends GetxController {
     if (response.code == 200) {
       final shared = await SharedPreferences.getInstance();
       shared.setString('userId', response.data?.id.toString() ?? '');
-      Get.toNamed('/home');
+      Get.offAllNamed('/home');
     }
   }
 }

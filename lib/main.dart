@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
           getPages: router,
-          initialRoute: '/login',
+          initialRoute: '/splash',
           title: 'Casa Inteligente',
           theme: ThemeData(primarySwatch: Colors.blue),
         );

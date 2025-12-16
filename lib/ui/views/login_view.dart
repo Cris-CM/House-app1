@@ -67,7 +67,7 @@ class LoginView extends GetView<LoginController> {
                         Obx(() {
                           return TextFormField(
                             controller: controller.passwordController,
-                            obscureText: controller.isObscure.value,
+                            obscureText: !controller.isObscure.value,
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.lock_outline),
                               labelText: "Contraseña",

@@ -6,6 +6,7 @@ import 'package:house_app/widgets/device_card.dart';
 import 'package:house_app/widgets/room_card.dart';
 import 'package:sizer/sizer.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -26,13 +27,26 @@ class HomeView extends GetView<HomeController> {
             backgroundColor: Palette.grey,
             elevation: 0,
             centerTitle: false,
-            title: Text(
-              'Casa Inteligente',
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Palette.black,
-              ),
+            title: Row(
+              children: [
+                Text(
+                  "Casa Inteligente",
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Palette.black,
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.clear();
+                    Get.offAllNamed('/splash');
+                  },
+                  icon: const Icon(Icons.logout_outlined, color: Colors.black),
+                ),
+              ],
             ),
           ),
           body: RefreshIndicator(
